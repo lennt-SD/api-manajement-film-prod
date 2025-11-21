@@ -1,0 +1,104 @@
+{
+  "info": {
+    "_postman_id": "f3e4a2c7-56b1-4e58-84d7-fb4b42b8b23b",
+    "name": "Directors API (MongoDB)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "chatgpt"
+  },
+  "item": [
+    {
+      "name": "GET - Semua Sutradara",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3300/directors",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3300",
+          "path": ["directors"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET - Sutradara by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3300/directors/{{directorId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3300",
+          "path": ["directors", "{{directorId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST - Tambah Sutradara",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Christopher Nolan\",\n  \"birthYear\": 1970\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3300/directors",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3300",
+          "path": ["directors"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT - Update Sutradara",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Quentin Tarantino\",\n  \"birthYear\": 1963\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3300/directors/{{directorId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3300",
+          "path": ["directors", "{{directorId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE - Hapus Sutradara",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3300/directors/{{directorId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3300",
+          "path": ["directors", "{{directorId}}"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "directorId",
+      "value": "ganti_dengan_id_yang_valid"
+    }
+  ]
+}
+

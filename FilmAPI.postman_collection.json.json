@@ -1,0 +1,147 @@
+{
+  "info": {
+    "name": "Film & Directors API (CRUD Lengkap)",
+    "_postman_id": "film-directors-api-full-crud",
+    "description": "Collection lengkap untuk menguji API Movies & Directors (CRUD + sukses/gagal).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET Semua Film",
+      "request": { "method": "GET", "url": "http://localhost:3000/movies" }
+    },
+    {
+      "name": "GET Film by ID (Sukses)",
+      "request": { "method": "GET", "url": "http://localhost:3000/movies/1" }
+    },
+    {
+      "name": "GET Film by ID (Gagal - Tidak Ada)",
+      "request": { "method": "GET", "url": "http://localhost:3000/movies/999" }
+    },
+    {
+      "name": "POST Tambah Film (Sukses)",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/movies",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"title\": \"Interstellar\", \"director\": \"Christopher Nolan\", \"year\": 2014 }"
+        }
+      }
+    },
+    {
+      "name": "POST Tambah Film (Gagal - Data Kurang)",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/movies",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"title\": \"Film Tanpa Tahun\" }"
+        }
+      }
+    },
+    {
+      "name": "PUT Update Film (Sukses)",
+      "request": {
+        "method": "PUT",
+        "url": "http://localhost:3000/movies/1",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"title\": \"Inception Updated\", \"director\": \"Christopher Nolan\", \"year\": 2010 }"
+        }
+      }
+    },
+    {
+      "name": "PUT Update Film (Gagal - Tidak Ada)",
+      "request": {
+        "method": "PUT",
+        "url": "http://localhost:3000/movies/999",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"title\": \"Film Baru\", \"director\": \"Unknown\", \"year\": 2023 }"
+        }
+      }
+    },
+    {
+      "name": "DELETE Film (Sukses)",
+      "request": { "method": "DELETE", "url": "http://localhost:3000/movies/1" }
+    },
+    {
+      "name": "DELETE Film (Gagal - Tidak Ada)",
+      "request": { "method": "DELETE", "url": "http://localhost:3000/movies/999" }
+    },
+
+    {
+      "name": "GET Semua Sutradara",
+      "request": { "method": "GET", "url": "http://localhost:3000/directors" }
+    },
+    {
+      "name": "GET Sutradara by ID (Sukses)",
+      "request": { "method": "GET", "url": "http://localhost:3000/directors/1" }
+    },
+    {
+      "name": "GET Sutradara by ID (Gagal - Tidak Ada)",
+      "request": { "method": "GET", "url": "http://localhost:3000/directors/999" }
+    },
+    {
+      "name": "POST Tambah Sutradara (Sukses)",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/directors",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Martin Scorsese\", \"country\": \"USA\" }"
+        }
+      }
+    },
+    {
+      "name": "POST Tambah Sutradara (Gagal - Data Kurang)",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/directors",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Tanpa Negara\" }"
+        }
+      }
+    },
+    {
+      "name": "PUT Update Sutradara (Sukses)",
+      "request": {
+        "method": "PUT",
+        "url": "http://localhost:3000/directors/1",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Christopher Nolan Updated\", \"country\": \"UK\" }"
+        }
+      }
+    },
+    {
+      "name": "PUT Update Sutradara (Gagal - Tidak Ada)",
+      "request": {
+        "method": "PUT",
+        "url": "http://localhost:3000/directors/999",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Unknown Director\", \"country\": \"Unknown\" }"
+        }
+      }
+    },
+    {
+      "name": "DELETE Sutradara (Sukses)",
+      "request": { "method": "DELETE", "url": "http://localhost:3000/directors/1" }
+    },
+    {
+      "name": "DELETE Sutradara (Gagal - Tidak Ada)",
+      "request": { "method": "DELETE", "url": "http://localhost:3000/directors/999" }
+    }
+  ]
+}
