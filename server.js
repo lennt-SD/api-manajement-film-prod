@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const db = require('./db.js'); // Koneksi PostgreSQL (pg)
+const db = require('./db.js');  
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { authenticateToken, authorizeRole } = require('./middleware/auth.js');
@@ -10,72 +10,47 @@ const app = express();
 const PORT = process.env.PORT || 3300;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// === MIDDLEWARE ===
-app.use(cors());
+// Middleware
 app.use(express.json());
+app.use(cors());
 
-// === ROUTES ===
-app.get('/status', (req, res) => {
+//Routes
+app.get('/status', (_req, res) => {
   res.json({ ok: true, service: 'film-api' });
-});
+}
+);
 
-// === AUTH ROUTES (REGISTER) ===
+// === AUTH ROUTES (Refactored for pg) ===
 app.post('/auth/register', async (req, res, next) => {
-  const { username, password } = req.body;
-
-  // Validasi input
-  if (!username || !password || password.length < 6) {
-    return res.status(400).json({
-      error: 'Username dan password (min 6 char) harus diisi'
-    });
-  }
-
-  try {
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Query insert
-    const sql = `
-      INSERT INTO users (username, password, role)
-      VALUES ($1, $2, $3)
-      RETURNING id, username
-    `;
-
-    const result = await db.query(sql, [
-      username.toLowerCase(),
-      hashedPassword,
-      'user'
-    ]);
-
-    res.status(201).json(result.rows[0]);
-
-  } catch (err) {
-    if (err.code === '23505') {
-      // 23505 = unique_violation PostgreSQL
-      return res.status(409).json({ error: 'Username sudah digunakan' });
+    const { username, password } = req.body;
+    if (!username || !password || password.length < 6 ) {
+        return res.status(400).json({ error: 'Username dan password (min 6 char) harus diisi' });
     }
-    next(err); // Pass ke middleware error
-  }
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const sql = 'INSERT INTO users (username, password, role) VALUES ($1, $2, $3) RETURNING id, username';
+        const result = await db.query(sql, [username, toLowerCase(), hashedPassword, 'user']);
+        res.status(201).json(result.rows[0] );
+    } catch (err) {
+        if (err.code === '23505') { //Kode error unik PostgreSQL
+            return res.status(400).json({ error: 'Username sudah digunakan' });
+        }
+        next(err);
+    }
 });
 
-// === RUN SERVER ===
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
 
 
-// === FALLBACK & ERROR HANDLING ===
+// ===FAILBACK & ERROR HANDLING===
 app.use((req, res) => {
   res.status(404).json({ error: 'Rute tidak ditemukan' });
-});
+}   );
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('[SERVER ERROR]', err.stack);
   res.status(500).json({ error: 'Terjadi kesalahan pada server' });
-});
-
-// === RUN SERVER ===
+}   );
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server aktif di http://localhost:${PORT}`);
-});
+    console.log(` Server tidak aktif di http://localhost:${PORT}`);
+}   );
