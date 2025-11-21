@@ -52,5 +52,5 @@ app.use((err, req, res, _next) => {
   res.status(500).json({ error: 'Terjadi kesalahan pada server' });
 }   );
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(` Server tidak aktif di http://localhost:${PORT}`);
+    console.log(` Server aktif di http://localhost:${PORT}`);
 }   );
