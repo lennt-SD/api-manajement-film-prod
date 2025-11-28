@@ -164,6 +164,60 @@ app.delete('/movies/:id', [authenticateToken, authorizeRole('admin')], async (re
 // === DIRECTOR ROUTES (TUGAS PRAKTIKUM) ===
 // (Mahasiswa harus me-refactor endpoint /directors dengan pola yang sama)
 
+app.get('/directors', async (req, res, next) => {
+  try {
+    const result = await db.query(SELECT * FROM directors ORDER BY id);
+    res.json(result.rows);
+  } catch (err) { next(err); }
+});
+
+app.get('/directors/:id', async (req, res, next) => {
+  try {
+    const result = await db.query(SELECT * FROM directors WHERE id=$1, [req.params.id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Director tidak ditemukan' });
+    res.json(result.rows[0]);
+  } catch (err) { next(err); }
+});
+
+app.post('/directors', [authenticateToken, authorizeRole('admin')], async (req, res, next) => {
+  const { name, birthYear } = req.body;
+  if (!name) return res.status(400).json({ error: 'name wajib diisi' });
+
+  try {
+    const result = await db.query(
+      `INSERT INTO directors (name, "birthYear")
+       VALUES ($1, $2)
+       RETURNING *`,
+      [name, birthYear || null]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) { next(err); }
+});
+
+app.put('/directors/:id', [authenticateToken, authorizeRole('admin')], async (req, res, next) => {
+  const { name, birthYear } = req.body;
+
+  try {
+    const result = await db.query(
+      `UPDATE directors SET name=$1, "birthYear"=$2
+       WHERE id=$3 RETURNING *`,
+      [name, birthYear || null, req.params.id]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Director tidak ditemukan' });
+    res.json(result.rows[0]);
+  } catch (err) { next(err); }
+});
+
+app.delete('/directors/:id', [authenticateToken, authorizeRole('admin')], async (req, res, next) => {
+  try {
+    const result = await db.query(
+      DELETE FROM directors WHERE id=$1 RETURNING *,
+      [req.params.id]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Director tidak ditemukan' });
+    res.status(204).send();
+  } catch (err) { next(err); }
+});
 
 // ===FAILBACK & ERROR HANDLING===
 app.use((req, res) => {
