@@ -163,18 +163,22 @@ app.delete('/movies/:id', [authenticateToken, authorizeRole('admin')], async (re
 
 // === DIRECTOR ROUTES (TUGAS PRAKTIKUM) ===
 // (Mahasiswa harus me-refactor endpoint /directors dengan pola yang sama)
-
+// === DIRECTORS ===
 app.get('/directors', async (req, res, next) => {
   try {
-    const result = await db.query(SELECT * FROM directors ORDER BY id);
+    const result = await db.query("SELECT * FROM directors ORDER BY id");
     res.json(result.rows);
   } catch (err) { next(err); }
 });
 
 app.get('/directors/:id', async (req, res, next) => {
   try {
-    const result = await db.query(SELECT * FROM directors WHERE id=$1, [req.params.id]);
-    if (result.rows.length === 0) return res.status(404).json({ error: 'Director tidak ditemukan' });
+    const result = await db.query(
+      "SELECT * FROM directors WHERE id=$1",
+      [req.params.id]
+    );
+    if (result.rows.length === 0)
+      return res.status(404).json({ error: 'Director tidak ditemukan' });
     res.json(result.rows[0]);
   } catch (err) { next(err); }
 });
@@ -199,11 +203,14 @@ app.put('/directors/:id', [authenticateToken, authorizeRole('admin')], async (re
 
   try {
     const result = await db.query(
-      `UPDATE directors SET name=$1, "birthYear"=$2
-       WHERE id=$3 RETURNING *`,
+      `UPDATE directors
+       SET name=$1, "birthYear"=$2
+       WHERE id=$3
+       RETURNING *`,
       [name, birthYear || null, req.params.id]
     );
-    if (result.rowCount === 0) return res.status(404).json({ error: 'Director tidak ditemukan' });
+    if (result.rowCount === 0)
+      return res.status(404).json({ error: 'Director tidak ditemukan' });
     res.json(result.rows[0]);
   } catch (err) { next(err); }
 });
@@ -211,10 +218,11 @@ app.put('/directors/:id', [authenticateToken, authorizeRole('admin')], async (re
 app.delete('/directors/:id', [authenticateToken, authorizeRole('admin')], async (req, res, next) => {
   try {
     const result = await db.query(
-      DELETE FROM directors WHERE id=$1 RETURNING *,
+      "DELETE FROM directors WHERE id=$1 RETURNING *",
       [req.params.id]
     );
-    if (result.rowCount === 0) return res.status(404).json({ error: 'Director tidak ditemukan' });
+    if (result.rowCount === 0)
+      return res.status(404).json({ error: 'Director tidak ditemukan' });
     res.status(204).send();
   } catch (err) { next(err); }
 });
