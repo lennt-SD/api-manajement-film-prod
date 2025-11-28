@@ -2,31 +2,37 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'rahasia_super_aman';
 
+// === Middleware: Validasi Token JWT ===
 function authenticateToken(req, res, next) {
-  // Ambil token dari header Authorization
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Format: "Bearer <token>"
+  const token = authHeader && authHeader.split(' ')[1];
 
-  // Jika token tidak ada
   if (!token) {
-    return res.status(401).json({
-      error: 'Akses ditolak, token tidak ditemukan'
-    });
+    return res.status(401).json({ error: 'Akses ditolak, token tidak ditemukan' });
   }
 
-  // Verifikasi token
   jwt.verify(token, JWT_SECRET, (err, decodedPayload) => {
     if (err) {
-      console.error('JWT Verify Error:', err.message);
-      return res.status(403).json({
-        error: 'Token tidak valid atau sudah kedaluwarsa'
-      });
+      return res.status(403).json({ error: 'Token tidak valid atau sudah kedaluwarsa' });
     }
 
-    // Simpan data user hasil decode ke req.user
     req.user = decodedPayload.user;
-    next(); // Lanjut ke endpoint berikutnya
+    next();
   });
 }
 
-module.exports = authenticateToken;
+// === Middleware: Cek Role User ===
+function authorizeRole(role) {
+  return (req, res, next) => {
+    if (!req.user || req.user.role !== role) {
+      return res.status(403).json({ error: 'Akses ditolak, role tidak sesuai' });
+    }
+    next();
+  };
+}
+
+// === Export beberapa function ===
+module.exports = {
+  authenticateToken,
+  authorizeRole
+};
